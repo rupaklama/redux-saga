@@ -1,25 +1,21 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { getUsersRequest } from './actions/usersActions';
 
-function App() {
+function App({ getUsersRequest }) {
+  useEffect(() => {
+    getUsersRequest() 
+  }, [getUsersRequest])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Redux Saga</h1>
+      
     </div>
   );
 }
 
-export default App;
+// Even though if there's no state/data, still need to pass in first arg to the connect func
+// first arg is always mapStateToProps func, pass null instead if no state/data
+// Second arg is the Action Creator object
+export default connect(null, { getUsersRequest })(App);
