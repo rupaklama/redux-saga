@@ -1,3 +1,4 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import axios from 'axios';
@@ -18,6 +19,7 @@ import { Provider } from 'react-redux';
 
 // our root saga
 import rootSaga from './sagas';
+
 
 // reducers
 import reducers from './reducers';

@@ -4,8 +4,11 @@ import { all } from 'redux-saga/effects';
 
 import usersSagas from './usersSagas';
 
-// all our sagas 
+// our sagas 
 export default function* rootSaga() {
+  // 'all' effect combinator
+  // run multiple effects in parallel & wait for all of them to complete 
+  // similar to Promise.all
   yield all([
     // spread operator here to create a new array from this usersSagas array we imported
     // all the forked processes will be running in parallel & waiting for all of them to be resolved 
