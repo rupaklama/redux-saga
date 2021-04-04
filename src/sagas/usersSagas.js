@@ -75,24 +75,6 @@ import { GET_USERS_REQUEST } from '../actions/usersAction';
 // base api URLs
 import * as api from '../api/usersApi';
 
-// Worker Saga: is running all the 'Side Effects' it was meant to do
-// Worker Saga - A Generator Function for Watcher Saga below
-// for 'getUsersRequest' action creator
-function* workerGetUsers() {
-  try {
-    const result = yield call(api.fetchUsers);
-    // console.log(result);
-    // put is to dispatch an action to our reducer
-    yield put(actions.getUsersSuccess({ users: result.data.data }));
-  } catch (e) {
-    yield put(
-      actions.usersError({
-        error: 'An error occurred when trying to get the user',
-      })
-    );
-  }
-}
-
 // Example
 function* testing() {
   // while true loop
@@ -118,6 +100,46 @@ const iterator = testing();
 // the Generator Function does not block the UI (async operation) while waiting for Functions to run. 
 // We are essentially controlling when to Enter or Exit a Function like with 
 // Looping Generator Function with the while (true) loop
+
+// api calls
+export const fetchUsers = () => {
+  return axios.get('/users', {
+    // request body object
+    params: {
+      limit: 1000, // users
+    },
+  });
+};
+
+export const createUser = ({ firstName, lastName }) => {
+  return axios.post('/users', {
+    firstName,
+    lastName,
+  });
+};
+
+export const deleteUser = userId => {
+  return axios.delete(`/users/${userId}`);
+};
+
+
+// Worker Saga: is running all the 'Side Effects' it was meant to do
+// Worker Saga - A Generator Function for Watcher Saga below
+// for 'getUsersRequest' action creator
+function* workerGetUsers() {
+  try {
+    const result = yield call(api.fetchUsers);
+    // console.log(result);
+    // put is to dispatch an action to our reducer
+    yield put(actions.getUsersSuccess({ users: result.data.data }));
+  } catch (e) {
+    yield put(
+      actions.usersError({
+        error: 'An error occurred when trying to get the user',
+      })
+    );
+  }
+}
 
 // Watcher Saga - A Generator Function
 // The Watcher Saga is typically the ROOT Saga to export & mount on the Store
