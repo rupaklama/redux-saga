@@ -3,8 +3,10 @@
 // like creating Actions or listening for Actions.
 
 // import { takeEvery } from 'redux-saga/effects';
-// 'takeEvery' effect - it listens for every Action of specific type we pass to it
-// takeEvery is the most familiar and provides a behavior similar to redux-thunk
+// Use this when: You want to watch for EVERY time a specific redux action was dispatched.
+// Use case: Getting / fetching a list of data from an API
+
+// 'takeEvery' helper/effect is the most familiar and provides a behavior similar to redux-thunk
 // NOTE: takes every matching action & run the given saga (non-blocking)
 
 // 'takeEvery' allows multiple fetchData instances to be started concurrently, non-blocking
