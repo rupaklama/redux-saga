@@ -14,7 +14,7 @@ export const getUsersRequest = () => {
 }
 
 // same as above but different syntax
-// action creators to fetch users
+// action creators to update Redux State with fetched users data
 // users - Array of users from api
 // Within the Saga, the Worker Saga will be calling this action creator 'getUsersSuccess' &
 // after fetching data, the Saga will pass the 'fetched data - users' as a param here as a payload
