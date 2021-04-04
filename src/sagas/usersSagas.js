@@ -32,6 +32,11 @@ import {
 // 'call' effect - We can make asynchronous calls using the call Effect like api request
 // It functions as await syntax to wait for function or promise to finish.
 // run a method, Promise or other Sage(blocking)
+// Use this when: You want to call a function or a promise but want to wait for that function or promise 
+// to finish running before executing the next line of code.
+  
+// Use case: In conjunction with "take" and blocking saga, or;
+// Calling a promise within a worker saga that queries an API endpoint.
 
 // 'fork' effect - In general, fork is useful when a saga needs to start a non-blocking task.
 // Non-blocking here means: the caller starts the task and continues
@@ -244,13 +249,13 @@ function* watchCreateUserRequest() {
   yield takeLatest(actions.CREATE_USER_REQUEST, createUser);
 }
 
-// If you have multiple Sagas watching for different actions,
+// If you have multiple Sagas watching for different Actions Types,
 // you can create multiple watchers with those built-in helpers,
 // which will behave like there was fork used to spawn them
 // (we'll talk about fork later. For now, consider it to be an Effect that
 // allows us to start multiple sagas in the background).
 
-// To hook up our userSagas into the Redux STORE
+// To start multiple sagas in the background
 const userSagas = [
   // we want to return a Fork processes of our Watcher Sagas to perform non-blocking calls
   fork(watchGetUsersRequest),
