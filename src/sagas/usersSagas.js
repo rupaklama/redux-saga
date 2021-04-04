@@ -69,8 +69,8 @@ import {
 // all(effects) - run multiple effects in parallel & wait for all of them to complete
 // similar to Promise.all
 
-// all our users action creators
-import * as actions from '../actions/usersActions';
+// all our users action creators & types
+import { GET_USERS_REQUEST } from '../actions/usersAction';
 
 // base api URLs
 import * as api from '../api/usersApi';
@@ -78,7 +78,7 @@ import * as api from '../api/usersApi';
 // Worker Saga: is running all the 'Side Effects' it was meant to do
 // Worker Saga - A Generator Function for Watcher Saga below
 // for 'getUsersRequest' action creator
-function* getUsers() {
+function* workerGetUsers() {
   try {
     const result = yield call(api.fetchUsers);
     // console.log(result);
@@ -93,17 +93,44 @@ function* getUsers() {
   }
 }
 
+// Example
+function* testing() {
+  // while true loop
+  while (true) {
+    yield 1;
+    yield 2;
+    yield 3;
+  }
+}
+
+// Generator function returns an Iterator object
+const iterator = testing();
+// console.log(iterator.next());
+// console.log(iterator.next());
+// console.log(iterator.next());
+// console.log(iterator.next()); // This will loop or start again & execute the 'yield 1' again
+
+// Note - Under the hood ALL EFFECTS in Redux Saga, this is exactly how Redux Watcher Sagas are
+// constantly watching for Redux Actions(types) Objects that were dispatched.
+// Redux Watcher Sagas are all running within these While(true) loop
+
+// NOTE - In the Context of Redux Saga, 
+// the Generator Function does not block the UI (async operation) while waiting for Functions to run. 
+// We are essentially controlling when to Enter or Exit a Function like with 
+// Looping Generator Function with the while (true) loop
+
 // Watcher Saga - A Generator Function
 // The Watcher Saga is typically the ROOT Saga to export & mount on the Store
-// Watcher Saga sees every action that is dispatched to the redux store.
+// Watcher Saga sees every Redux Actions(types) Objects that is dispatched to the redux store.
 // If it matches the action it is told to handle, it will assign it to its Worker Saga
 
 // This will watch every time 'getUsersRequest' action creator is being dispatch
 // & perform operation on this action by calling Worker Saga above.
 function* watchGetUsersRequest() {
   // yield is to pause & return the value from 'takeEvery effect' async operation
-  yield takeEvery(actions.GET_USERS_REQUEST, getUsers); // action creator & Worker Saga
+  yield takeEvery(GET_USERS_REQUEST, workerGetUsers); // action type & our Worker Saga function
 }
+
 // NOTE: In the context of Redux-Saga, 'takeEvery' is doing non-blocking operation
 // Under the hood, 'takeEvery' is running 'while(true)' loop &
 // constantly watching for whatever Action creators we pass in
