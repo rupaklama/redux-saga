@@ -255,12 +255,13 @@ function* watchCreateUserRequest() {
 // (we'll talk about fork later. For now, consider it to be an Effect that
 // allows us to start multiple sagas in the background).
 
-// To start multiple sagas in the background
+// Fork - To start multiple sagas in the background
 const userSagas = [
-  // we want to return a Fork processes of our Watcher Sagas to perform non-blocking calls
+  // we want to return a Fork processes of our Watcher Sagas to perform non-blocking calls or
+  // run Watcher Sagas in parallels/async without interfering other Sagas.
+  // Any Errors that occurs with all these Fork processes, we can catch it independently without
+  // effecting other multiple Sagas Fork processes
   fork(watchGetUsersRequest),
-  fork(watchCreateUserRequest),
-  fork(watchDeleteUserRequest),
 ];
 
 export default userSagas;
