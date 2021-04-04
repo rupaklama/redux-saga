@@ -107,7 +107,7 @@ const iterator = testing();
 // Looping Generator Function with the while (true) loop
 
 // api calls
-export const fetchUsers = () => {
+const fetchUsers = () => {
   return axios.get('/users', {
     // request body object
     params: {
@@ -116,14 +116,14 @@ export const fetchUsers = () => {
   });
 };
 
-export const createUser = ({ firstName, lastName }) => {
+const createUser = ({ firstName, lastName }) => {
   return axios.post('/users', {
     firstName,
     lastName,
   });
 };
 
-export const deleteUser = userId => {
+const deleteUser = userId => {
   return axios.delete(`/users/${userId}`);
 };
 
@@ -133,7 +133,8 @@ export const deleteUser = userId => {
 // for 'getUsersRequest' action creator
 function* workerGetUsers() {
   try {
-    const result = yield call(api.fetchUsers);
+    // const result = yield call(api.fetchUsers);
+    const result = yield call(fetchUsers);
     // console.log(result);
     // put is to dispatch an action to our reducer
     yield put(actions.getUsersSuccess({ users: result.data.data }));
