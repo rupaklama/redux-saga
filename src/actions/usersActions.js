@@ -14,6 +14,11 @@ export const getUsersRequest = () => {
 }
 
 // same as above but different syntax
+// action creators to fetch users
+// users - Array of users from api
+// Within the Saga, the Worker Saga will be calling this action creator 'getUsersSuccess' &
+// after fetching data, the Saga will pass the 'fetched data - users' as a param here as a payload
+// which will update our Users Reducer - Users Slice State.
 export const getUsersSuccess = ({ users }) => ({
   type: GET_USERS_SUCCESS,
   payload: { users }
