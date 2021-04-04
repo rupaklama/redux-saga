@@ -119,12 +119,6 @@ const fetchUsers = () => {
   });
 };
 
-const createUser = ({ firstName, lastName }) => {
-  return axios.post('/users', {
-    firstName,
-    lastName,
-  });
-};
 
 const deleteUser = userId => {
   return axios.delete(`/users/${userId}`);
@@ -220,6 +214,15 @@ function* watchDeleteUserRequest() {
   }
 }
 
+// api call 
+const createUser = ({ firstName, lastName }) => {
+  return axios.post('/users', {
+    firstName,
+    lastName,
+  });
+};
+
+
 // If we want to only get the response of the latest request fired
 // (e.g. to always display the latest version of data) we can use the 'takeLatest' helper/effect
 
@@ -230,20 +233,38 @@ function* watchDeleteUserRequest() {
 // NOTE: takes every matching action & run the given Saga, but cancels every previous saga
 // that is still running(blocking)
 
+// Use 'takeLatest' when: There's the potential for a redux action to be dispatched multiple times in a short period and 
+// could potentially initiate the running of multiple instances of the same saga - use takeLatest 
+// to ONLY take the latest currently running saga for the associated dispatched redux action.
+
+// Use cases: Creating or updating a record, or;
+// If you have a complex app that queries the same API endpoint from multiple components at the same time - 
+// for example if you have a navbar that displays the currently logged in user's name, 
+// but the user is viewing a 'settings' page to view their personal details meaning both the navbar and 
+// the settings page will query the same API endpoint - you'll generally want to take the latest call for that data.
+
 // Worker saga
 // Redux Action gets passed into Redux Worker Saga as an arg that we specify in Watcher Saga
-function* createUser(action) {
+// NOTE - This is the first Saga we come across where we need to EXTRACT some properties from the Redux Action Object that was dispatched.
+// NOTE - In Watcher Saga, the Redux Action Object is actually passed in to the Worker Saga - (CREATE_USER_REQUEST, workerCreateUser)
+
+function* workerCreateUser(action) { // 'action' Object is actually passed in to the Worker Saga
   // extracting data from action creator which got dispatch
-  // yield console.log(action)
+  // console.log(action) - {type: "CREATE_USER_REQUEST", payload: {…}}
+  // yield; // need to return at least one value in generator function
+  
   try {
-    yield call(api.createUser, {
-      // adding one more arg for user data object
+    // On call effect - we can add additional arguments as a Second arg for First arg - action object
+    yield call(createUser, { // api endpoint above
+      // accessing payload of Action Object -  {type: "CREATE_USER_REQUEST", payload: {…}}
       firstName: action.payload.firstName,
       lastName: action.payload.lastName,
     });
 
-    // calling getUsers Worker Saga which will update users state in Redux store
-    yield call(getUsers);
+    // calling 'workerGetUsers' Worker Saga which will refresh & update Users State Slice with the New User in Redux store
+    // This New User will be added in Users State Slice & displayed in UI
+    // Display the updated data
+    yield call(workerGetUsers);
   } catch (e) {
     yield put(
       actions.usersError({
@@ -255,7 +276,7 @@ function* createUser(action) {
 
 // Watcher Saga
 function* watchCreateUserRequest() {
-  yield takeLatest(actions.CREATE_USER_REQUEST, createUser);
+  yield takeLatest(CREATE_USER_REQUEST, workerCreateUser);
 }
 
 // If you have multiple Sagas watching for different Actions Types,
@@ -271,6 +292,7 @@ const userSagas = [
   // Any Errors that occurs with all these Fork processes, we can catch it independently without
   // effecting other multiple Sagas Fork processes
   fork(watchGetUsersRequest),
+  fork(watchCreateUserRequest),
 ];
 
 export default userSagas;
