@@ -54,6 +54,9 @@ import {
 // block execution for a predefined number of milliseconds
 
 // 'put' effect - is to dispatch an action to our reducer(non-blocking)
+// Use this when: You want to dispatch a redux action from within a REDUX SAGA.
+// Use case: Any time you want to update your redux state - usually after a call to an API resolves 
+// and you want to update your redux state with the resulting data from the API.
 
 // 'debounce' effect - the purpose of debounce is to prevent calling saga until the actions
 // are settled off. Meaning, until the actions we listen on will not be dispatched for a
@@ -103,7 +106,7 @@ const iterator = testing();
 
 // NOTE - In the Context of Redux Saga, 
 // the Generator Function does not block the UI (async operation) while waiting for Functions to run. 
-// We are essentially controlling when to Enter or Exit a Function like with 
+// We are essentially controlling when to Enter or Exit a Function like with in
 // Looping Generator Function with the while (true) loop
 
 // api calls
@@ -132,12 +135,17 @@ const deleteUser = userId => {
 // Worker Saga - A Generator Function for Watcher Saga below
 // for 'getUsersRequest' action creator
 function* workerGetUsers() {
+  // Use this 'call' effect when: You want to call a function or a promise but want to wait for that function or promise
+  // to finish running before executing the next line of code.
   try {
     // const result = yield call(api.fetchUsers);
     const result = yield call(fetchUsers);
     // console.log(result);
     // put is to dispatch an action to our reducer
-    yield put(actions.getUsersSuccess({ users: result.data.data }));
+    // yield put(actions.getUsersSuccess({ users: result.data.data }));
+    
+    // Use 'put' when: You want to dispatch a redux action creator from within a redux saga to update our Redux State
+    yield put(getUsersSuccess({ users: result.data.data }));
   } catch (e) {
     yield put(
       actions.usersError({
@@ -152,7 +160,7 @@ function* workerGetUsers() {
 // Watcher Saga sees every Redux Actions(types) Objects that is dispatched to the redux store.
 // If it matches the action it is told to handle, it will assign it to its Worker Saga
 
-// This will watch every time 'getUsersRequest' action creator is being dispatch
+// This will watch every time 'GET_USERS_REQUEST' action type is being dispatch
 // & perform operation on this action by calling Worker Saga above.
 function* watchGetUsersRequest() {
   // yield is to pause & return the value from 'takeEvery effect' async operation
