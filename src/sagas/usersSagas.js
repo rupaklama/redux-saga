@@ -119,12 +119,6 @@ const fetchUsers = () => {
   });
 };
 
-
-const deleteUser = userId => {
-  return axios.delete(`/users/${userId}`);
-};
-
-
 // Worker Saga: is running all the 'Side Effects' it was meant to do
 // Worker Saga - A Generator Function for Watcher Saga below
 // for 'getUsersRequest' action creator
@@ -173,19 +167,28 @@ function* watchGetUsersRequest() {
 //   }
 // }
 
+
+
+// delete api
+const deleteUser = userId => {
+  return axios.delete(`/users/${userId}`);
+};
+
 // import { take } from 'redux-saga/effects';
 // 'take' effect is kind a works same as 'takeEvery' but ONE AT A TIME
 //  wait for a redux actions to be dispatched into the store (blocking)
 // Finish first action then execute second one approach
 
 // Worker Saga
-// extracting data from action creator which got dispatch
-function* deleteUser({ userId }) {
+// { userId } - extracting from (workerDeleteUser, {userId: action.payload.userId}) in Watcher Saga
+function* workerDeleteUser({ userId }) {
   try {
-    yield call(api.deleteUser, userId);
+    // calling api & passing in user ID 
+    yield call(deleteUser, userId);
 
-    // calling getUsers Worker Saga which will update users state in Redux store
-    yield call(getUsers);
+    // calling 'workerGetUsers' Worker Saga which will update users state in Redux store
+    // To get updated list of Users
+    yield call(workerGetUsers);
   } catch (e) {
     yield put(
       actions.usersError({
@@ -202,12 +205,12 @@ function* watchDeleteUserRequest() {
   // In the mean time, this Watcher Saga is ignoring any additional delete user request actions
   // So, we need to wait entire delete saga to resolve
   while (true) {
-    // can not pass in a Worker Saga into `take effect' since it's a lower level helper
-    // which simply returns an action that got dispatch
-    const action = yield take(actions.DELETE_USER_REQUEST);
+    // can not pass in a Worker Saga into `take effect' since it's a lower level helper/effect
+    // which simply returns an Action that got dispatch
+    const action = yield take(DELETE_USER_REQUEST);
     // with the data from the dispatched action above, we can actually use
     // `yield call` to call the Worker Saga
-    yield call(deleteUser, {
+    yield call(workerDeleteUser, {
       // calling deleteUser saga with arg
       userId: action.payload.userId,
     });
@@ -293,6 +296,7 @@ const userSagas = [
   // effecting other multiple Sagas Fork processes
   fork(watchGetUsersRequest),
   fork(watchCreateUserRequest),
+  fork(watchDeleteUserRequest),
 ];
 
 export default userSagas;
