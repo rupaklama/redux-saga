@@ -269,8 +269,11 @@ function* workerCreateUser(action) { // 'action' Object is actually passed in to
     // Display the updated data
     yield call(workerGetUsers);
   } catch (e) {
+    // Use 'put' effect when: You want to dispatch a redux action from within a redux saga.
+    // Use case: Any time you want to update your redux state - usually after a call to an API resolves and 
+    // you want to update your redux state with the resulting data from the API.
     yield put(
-      actions.usersError({
+      usersError({
         error: 'An error occurred when trying to create the user',
       })
     );
