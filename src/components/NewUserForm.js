@@ -9,6 +9,10 @@ const NewUserForm = () => {
 
   // useDispatch hook to dispatch an action creator
   const dispatch = useDispatch();
+  
+  // this hook takes an arrow func with arg state & which part of state we want from combineReducers
+  const users = useSelector(state => state.users);
+  console.log(users.error);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -19,8 +23,16 @@ const NewUserForm = () => {
     setFirstName('');
     setLastName('');
   };
+  
+  const handleCloseAlert = () => {
+    dispatch(usersError({ error: '' }));
+  };
 
   return (
+    <Alert color='danger' isOpen={!!users.error} toggle={handleCloseAlert}>
+        {users.error}
+      </Alert>
+    
     <Form onSubmit={handleSubmit}>
       <FormGroup>
         <Label>First Name</Label>
