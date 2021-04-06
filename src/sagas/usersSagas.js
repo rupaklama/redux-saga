@@ -259,7 +259,8 @@ function* workerCreateUser(action) { // 'action' Object is actually passed in to
   try {
     // On call effect - we can add additional arguments as a Second arg for First arg - action object
     yield call(createUser, { // api endpoint above
-      // accessing payload of Action Object -  {type: "CREATE_USER_REQUEST", payload: {…}}
+      // accessing payload of Action Object -  {type: "CREATE_USER_REQUEST", payload: {…}} &
+      // passing as args on Request Body object for network request
       firstName: action.payload.firstName,
       lastName: action.payload.lastName,
     });
@@ -282,6 +283,8 @@ function* workerCreateUser(action) { // 'action' Object is actually passed in to
 
 // Watcher Saga
 function* watchCreateUserRequest() {
+  // NOTE - When observing Redux Actions with 'takeEvery' or 'takeLatest' effects,
+  // the Redux Action with its payload is actually passed into the Worker Saga above
   yield takeLatest(CREATE_USER_REQUEST, workerCreateUser);
 }
 
