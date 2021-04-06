@@ -211,7 +211,8 @@ function* watchDeleteUserRequest() {
     // with the data from the dispatched action above, we can actually use
     // `yield call` to call the Worker Saga
     yield call(workerDeleteUser, {
-      // calling deleteUser saga with arg
+      // On call effect - we can add additional arguments as a Second arg for First arg - Worker Saga or Action object
+      // Passing in User id in Worker Saga from Action Object's payload 
       userId: action.payload.userId,
     });
   }
