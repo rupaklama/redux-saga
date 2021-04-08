@@ -38,6 +38,8 @@ import {
 // Use case: In conjunction with "take" and blocking saga, or;
 // Calling a promise within a worker saga that queries an API endpoint.
 
+// 'apply': It works just like a 'call' except it changes the scope of 'call'
+
 // 'fork' effect - In general, fork is useful when a saga needs to start a non-blocking task.
 // Non-blocking here means: the caller starts the task and continues
 // executing without waiting for it to complete.
