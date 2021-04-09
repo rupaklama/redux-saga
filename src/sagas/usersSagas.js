@@ -79,8 +79,9 @@ import {
 // other sagas are canceled. similar to Promise.race()
 // Note: fork & race are used for managing concurrently between Sagas
 
-// all(effects) - run multiple effects in parallel & wait for all of them to complete
-// similar to Promise.all
+// all(effects) - run multiple effects in parallel & wait for all of them to complete similar to Promise.all
+// combines numerous take statements into one 
+// code execution resumes when all actions have been dispatched
 
 // all our users action creators & types
 import { GET_USERS_REQUEST } from '../actions/usersAction';
