@@ -52,6 +52,9 @@ import {
 // All our logic code are separated into different forks or units
 // to avoid errors with one fork to another.
 
+// 'spawn' effect - creates a new process, similar to fork- caller is not interrupted
+// new process is not effected if caller erros or cancelled, this is the main difference between spawn vs fork
+
 // 'delay' effect - is like setTimeout method in saga
 // block execution for a predefined number of milliseconds
 
