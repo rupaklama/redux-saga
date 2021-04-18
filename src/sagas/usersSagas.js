@@ -290,7 +290,7 @@ function* workerCreateUser(action) { // 'action' Object is actually passed in to
 
 // Watcher Saga
 function* watchCreateUserRequest() {
-  // NOTE - When observing Redux Actions with 'takeEvery' or 'takeLatest' effects,
+  // NOTE - When observing Redux Actions with 'take', 'takeEvery' and 'takeLatest' effects,
   // the Redux Action with its payload is actually passed into the Worker Saga above
   yield takeLatest(CREATE_USER_REQUEST, workerCreateUser);
 }
