@@ -83,11 +83,40 @@ import {
 // combines numerous take statements into one 
 // code execution resumes when all actions have been dispatched
 
+// base api URLs
+import * as api from '../api/usersApi';
+
 // all our users action creators & types
 import { GET_USERS_REQUEST } from '../actions/usersAction';
 
-// base api URLs
-import * as api from '../api/usersApi';
+
+// Action creators here to analyze
+export const getUsersSuccess = ({ users }) => ({
+  type: GET_USERS_SUCCESS,
+  payload: { users }
+})
+
+// create user
+export const createUserRequest = ({ firstName, lastName }) => ({
+  type: CREATE_USER_REQUEST,
+  payload: { firstName, lastName }
+})
+
+// delete user
+export const deleteUserRequest = (userId) => ({
+ type: DELETE_USER_REQUEST,
+ payload: { userId }
+})
+
+// error
+export const usersError = ({error}) => ({
+  type: USERS_ERROR,
+  payload: { error }
+})
+
+
+
+
 
 // Example
 function* testing() {
