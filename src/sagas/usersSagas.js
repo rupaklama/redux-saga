@@ -239,7 +239,7 @@ function* workerCreateUser(action) { // 'action' Object is actually passed in to
   // yield; // need to return at least one value in generator function
   
   try {
-    // On call effect - we can add additional arguments as a Second arg for First arg - action object
+    // On call effect - we can add additional arguments to our Action as a Second Arg Object - action object
     yield call(createUser, { // api endpoint above
       // accessing payload of Action Object -  {type: "CREATE_USER_REQUEST", payload: {…}} &
       // passing as args on Request Body object for network request
