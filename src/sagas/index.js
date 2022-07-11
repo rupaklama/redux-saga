@@ -11,7 +11,7 @@ export default function* rootSaga() {
   // similar to Promise.all
   yield all([
     // spread operator here to create a new array from this usersSagas array we imported
-    // all the forked processes will be running in parallel & waiting for all of them to be resolved 
+    // all the forked processes will be created/running in parallel & waiting for all of them to be resolved 
     ...usersSagas
   ])
 }
