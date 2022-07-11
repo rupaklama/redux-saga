@@ -310,6 +310,7 @@ function* watchDeleteUserRequest() {
     // can not pass in a Worker Saga into `take effect' since it's a lower level helper/effect
     // which simply returns an Action that got dispatch
     const action = yield take(DELETE_USER_REQUEST); // CANNOT PASS WORKER SAGA as second arg here since it's a lower level helper/effect
+    // NOTE - take returns Action Object which was just dispatched
     // with the data from the dispatched action above, we can actually use
     // `yield call` to call the Worker Saga
     yield call(workerDeleteUser, {
